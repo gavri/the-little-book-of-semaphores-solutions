@@ -21,6 +21,11 @@ class ExerciseContext
     raise "FAILED" unless expected == statements
   end
 
+  def assert_order_is_one_of(*expected)
+    threads.each(&:join)
+    raise "#{expected.inspect}:#{statements.inspect}" unless expected.include?(statements)
+  end
+
   private
   attr_reader :name, :threads, :statements
 
@@ -29,7 +34,7 @@ class ExerciseContext
   end
 end
 
-['3.1-signalling.rb'].each do |test_name|
+['3.1-signalling.rb', '3.3-rendezvous.rb'].each do |test_name|
   100.times do
     ExerciseContext.new(test_name).run
   end
