@@ -3,6 +3,7 @@ class ExerciseContext
   def initialize(name)
     @name = name
     @statements = []
+    @statements_mutex = Mutex.new
     @threads = []
   end
 
@@ -12,7 +13,7 @@ class ExerciseContext
   end
 
   def statement name
-    @statements << name
+    @statements_mutex.synchronize { @statements << name }
   end
 
   def assert_order(*expected)
