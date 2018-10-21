@@ -1,6 +1,8 @@
 require_relative './sem'
 
-class ExerciseContext
+require 'minitest'
+
+class ExerciseContext < Minitest::Test
   def initialize(name)
     @name = name
     @statements = []
@@ -9,6 +11,7 @@ class ExerciseContext
     @threads = []
     @number_of_concurrent_threads = java.util.concurrent.atomic.AtomicInteger.new(0)
     @maximum_number_of_concurrent_threads = 0
+    super(name)
   end
 
   def run
@@ -32,7 +35,7 @@ class ExerciseContext
 
   def assert_max_concurrent(max_allowed_concurrent)
     threads.each(&:join)
-    raise "FAILED" unless @maximum_number_of_concurrent_threads <= max_allowed_concurrent
+    assert_operator @maximum_number_of_concurrent_threads, :<=, max_allowed_concurrent
   end
 
   def statement name
@@ -41,17 +44,17 @@ class ExerciseContext
 
   def assert_count(expected)
     threads.each(&:join)
-    raise "expected: #{expected}, actual: #{@count}" unless expected == @count
+    assert_equal expected, @count
   end
 
   def assert_order(*expected)
     threads.each(&:join)
-    raise "FAILED" unless expected == statements
+    assert_equal expected, statements
   end
 
   def assert_order_is_one_of(*expected)
     threads.each(&:join)
-    raise "#{expected.inspect}:#{statements.inspect}" unless expected.include?(statements)
+    assert_includes expected, statements
   end
 
   private
