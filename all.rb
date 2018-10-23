@@ -15,7 +15,7 @@ class ExerciseContext < Minitest::Test
   end
 
   def run
-    test_src = File.read(name)
+    test_src = File.read("#{name}.rb")
     instance_eval(test_src)
   end
 
@@ -65,7 +65,7 @@ class ExerciseContext < Minitest::Test
   end
 end
 
-['3.1-signalling.rb', '3.3-rendezvous.rb', '3.4-mutex.rb', '3.5-multiplex.rb'].each do |test_name|
+%w[3.1-signalling 3.3-rendezvous 3.4-mutex 3.5-multiplex].each do |test_name|
   100.times do
     ExerciseContext.new(test_name).run
   end
