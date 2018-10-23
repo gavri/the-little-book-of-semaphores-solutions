@@ -10,4 +10,6 @@ async do
   statement :b1
 end
 
+wait_on_test_threads
+
 assert_order(:a1, :b1)

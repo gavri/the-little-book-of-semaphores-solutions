@@ -34,7 +34,6 @@ class ExerciseContext < Minitest::Test
   end
 
   def assert_max_concurrent(max_allowed_concurrent)
-    threads.each(&:join)
     assert_operator @maximum_number_of_concurrent_threads, :<=, max_allowed_concurrent
   end
 
@@ -43,18 +42,19 @@ class ExerciseContext < Minitest::Test
   end
 
   def assert_count(expected)
-    threads.each(&:join)
     assert_equal expected, @count
   end
 
   def assert_order(*expected)
-    threads.each(&:join)
     assert_equal expected, statements
   end
 
   def assert_order_is_one_of(*expected)
-    threads.each(&:join)
     assert_includes expected, statements
+  end
+
+  def wait_on_test_threads
+    threads.each(&:join)
   end
 
   private

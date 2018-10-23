@@ -12,4 +12,6 @@ async do
   sem.release
 end
 
+wait_on_test_threads
+
 assert_count(2)

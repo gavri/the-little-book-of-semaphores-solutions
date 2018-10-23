@@ -12,4 +12,6 @@ number_of_threads.times do
   end
 end
 
+wait_on_test_threads
+
 assert_max_concurrent(max_allowed_concurrent)
