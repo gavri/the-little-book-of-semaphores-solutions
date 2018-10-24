@@ -5,9 +5,9 @@ require 'minitest'
 class ExerciseContext < Minitest::Test
   def initialize(name)
     @name = name
-    @statements = []
+    @events = []
     @count = 0
-    @statements_mutex = Mutex.new
+    @events_mutex = Mutex.new
     @threads = []
     @number_of_concurrent_threads = java.util.concurrent.atomic.AtomicInteger.new(0)
     @maximum_number_of_concurrent_threads = 0
@@ -37,8 +37,8 @@ class ExerciseContext < Minitest::Test
     assert_operator @maximum_number_of_concurrent_threads, :<=, max_allowed_concurrent
   end
 
-  def statement name
-    @statements_mutex.synchronize { @statements << name }
+  def event name
+    @events_mutex.synchronize { @events << name }
   end
 
   def assert_count(expected)
@@ -46,11 +46,11 @@ class ExerciseContext < Minitest::Test
   end
 
   def assert_order(*expected)
-    assert_equal expected, statements
+    assert_equal expected, events
   end
 
   def assert_order_is_one_of(*expected)
-    assert_includes expected, statements
+    assert_includes expected, events
   end
 
   def wait_on_test_threads
@@ -58,7 +58,7 @@ class ExerciseContext < Minitest::Test
   end
 
   private
-  attr_reader :name, :threads, :statements
+  attr_reader :name, :threads, :events
 
   def async(&block)
     @threads << Thread.new(&block)

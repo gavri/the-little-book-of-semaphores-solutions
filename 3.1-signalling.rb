@@ -1,13 +1,13 @@
 sem = Semaphore.new(0)
 
 async do
-  statement :a1
+  event :a1
   sem.signal
 end
 
 async do
   sem.wait
-  statement :b1
+  event :b1
 end
 
 wait_on_test_threads

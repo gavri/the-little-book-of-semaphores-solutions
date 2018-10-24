@@ -2,17 +2,17 @@ a_sem = Semaphore.new(0)
 b_sem = Semaphore.new(0)
 
 async do
-  statement :a1
+  event :a1
   a_sem.release
   b_sem.acquire
-  statement :a2
+  event :a2
 end
 
 async do
-  statement :b1
+  event :b1
   b_sem.release
   a_sem.acquire
-  statement :b2
+  event :b2
 end
 
 wait_on_test_threads
