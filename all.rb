@@ -2,6 +2,8 @@ require_relative './sem'
 
 require 'minitest'
 
+require 'set'
+
 class ExerciseContext < Minitest::Test
   def initialize(name)
     @name = name
@@ -53,6 +55,30 @@ class ExerciseContext < Minitest::Test
     assert_includes expected, events
   end
 
+  def c(*expected)
+    Set.new(expected)
+  end
+
+  def s(*expected)
+    [*expected]
+  end
+
+  def assert_history(expected)
+    length = expected.size
+    rest_of_events = events.clone
+    expected.each do |e|
+      if e.is_a? Set
+        size = e.size
+        events_for_e = rest_of_events[0...size]
+        rest_of_events = rest_of_events[size..-1]
+        assert_equal e, Set.new(events_for_e)
+      else
+        assert_equal e, rest_of_events.shift
+      end
+    end
+    assert_equal 0, rest_of_events.size
+  end
+
   def wait_on_test_threads
     threads.each(&:join)
   end
@@ -65,7 +91,7 @@ class ExerciseContext < Minitest::Test
   end
 end
 
-%w[3.1-signalling 3.3-rendezvous 3.4-mutex 3.5-multiplex].each do |test_name|
+%w[3.1-signalling 3.3-rendezvous 3.4-mutex 3.5-multiplex 3.6-barrier].each do |test_name|
   100.times do
     ExerciseContext.new(test_name).run
   end
