@@ -90,10 +90,14 @@ class ExerciseContext < Minitest::Test
 end
 
 number_of_trials = 100
+verbose = false
 
 OptionParser.new do |opts|
   opts.on("-n", "--number_of_trials NUMBER_OF_TRIALS") do |n|
     number_of_trials = n.to_i
+  end
+  opts.on("-v", "--verbose") do |v|
+    verbose = v
   end
 end.parse!
 
@@ -106,7 +110,9 @@ else
 end
 
 test_names.each do |test_name|
+  puts test_name if verbose
   number_of_trials.times do |i|
+    print "#{i}\r" if verbose
     ExerciseContext.new(test_name).run
   end
 end
