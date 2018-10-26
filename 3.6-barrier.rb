@@ -1,24 +1,9 @@
-class AtomicIncrementer
-  def initialize(n)
-    @n = n
-    @mutex = Semaphore.new(1)
-  end
-
-  def increment
-    @mutex.acquire
-    @n += 1
-    @mutex.release
-  end
-
-  def count_is_at?(n)
-    @n == n
-  end
-end
+require './atomic-counter'
 
 class Barrier
   def initialize(number_of_threads)
     @number_of_threads = number_of_threads
-    @number_of_threads_at_barrier = AtomicIncrementer.new(0)
+    @number_of_threads_at_barrier = AtomicCounter.new(0)
     @turnstile = Semaphore.new(0)
   end
 

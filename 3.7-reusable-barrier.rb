@@ -1,33 +1,5 @@
-class Lock
-  def initialize
-    @semaphore = Semaphore.new(1)
-  end
-
-  def critical_section
-    @semaphore.acquire
-    yield
-    @semaphore.release
-  end
-end
-
-class AtomicCounter
-  def initialize(n)
-    @n = n
-    @lock = Lock.new
-  end
-
-  def increment
-    @lock.critical_section { @n += 1 }
-  end
-
-  def decrement
-    @lock.critical_section { @n -= 1 }
-  end
-
-  def count_is_at?(n)
-    @n == n
-  end
-end
+require './lock'
+require './atomic-counter'
 
 class ReusableBarrier
   def initialize(number_of_threads)
