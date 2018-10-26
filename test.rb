@@ -1,8 +1,7 @@
 require_relative './sem'
-
 require 'minitest'
-
 require 'set'
+require 'optparse'
 
 class ExerciseContext < Minitest::Test
   def initialize(name)
@@ -90,6 +89,14 @@ class ExerciseContext < Minitest::Test
   end
 end
 
+number_of_trials = 100
+
+OptionParser.new do |opts|
+  opts.on("-n", "--number_of_trials NUMBER_OF_TRIALS") do |n|
+    number_of_trials = n.to_i
+  end
+end.parse!
+
 test_names = []
 
 if ARGV.empty?
@@ -99,7 +106,7 @@ else
 end
 
 test_names.each do |test_name|
-  100.times do |i|
+  number_of_trials.times do |i|
     ExerciseContext.new(test_name).run
   end
 end
