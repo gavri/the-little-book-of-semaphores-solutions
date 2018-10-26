@@ -93,7 +93,7 @@ end
 test_names = []
 
 if ARGV.empty?
-  test_names = %w[3.1-signalling.rb 3.3-rendezvous.rb 3.4-mutex.rb 3.5-multiplex.rb 3.6-barrier.rb]
+  test_names = Dir.glob('[0-9]*.rb')
 else
   test_names = ARGV
 end
