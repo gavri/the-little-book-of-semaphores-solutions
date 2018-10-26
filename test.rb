@@ -17,8 +17,7 @@ class ExerciseContext < Minitest::Test
   end
 
   def run
-    test_src = File.read("#{name}.rb")
-    instance_eval(test_src)
+    instance_eval(File.read(name))
   end
 
   def inc_count
@@ -94,7 +93,7 @@ end
 test_names = []
 
 if ARGV.empty?
-  test_names = %w[3.1-signalling 3.3-rendezvous 3.4-mutex 3.5-multiplex 3.6-barrier]
+  test_names = %w[3.1-signalling.rb 3.3-rendezvous.rb 3.4-mutex.rb 3.5-multiplex.rb 3.6-barrier.rb]
 else
   test_names = ARGV
 end
