@@ -91,9 +91,16 @@ class ExerciseContext < Minitest::Test
   end
 end
 
-%w[3.1-signalling 3.3-rendezvous 3.4-mutex 3.5-multiplex 3.6-barrier].each do |test_name|
-  100.times do
+test_names = []
+
+if ARGV.empty?
+  test_names = %w[3.1-signalling 3.3-rendezvous 3.4-mutex 3.5-multiplex 3.6-barrier]
+else
+  test_names = ARGV
+end
+
+test_names.each do |test_name|
+  100.times do |i|
     ExerciseContext.new(test_name).run
   end
 end
-
