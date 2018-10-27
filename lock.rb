@@ -4,8 +4,8 @@ class Lock
   end
 
   def critical_section
-    @semaphore.acquire
+    @semaphore.wait
     yield
-    @semaphore.release
+    @semaphore.signal
   end
 end

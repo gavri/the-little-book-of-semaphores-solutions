@@ -14,17 +14,17 @@ class ReusableBarrierWithPreloadedTurnstiles
     @lock.critical_section do
       @number_of_threads_at_barrier.increment
       if @number_of_threads_at_barrier.count_is_at?(@number_of_threads)
-        @first_turnstile.release(@number_of_threads)
+        @first_turnstile.signal(@number_of_threads)
       end
     end
-    @first_turnstile.acquire
+    @first_turnstile.wait
     @lock.critical_section do
       @number_of_threads_at_barrier.decrement
       if @number_of_threads_at_barrier.count_is_at?(0)
-        @second_turnstile.release(@number_of_threads)
+        @second_turnstile.signal(@number_of_threads)
       end
     end
-    @second_turnstile.acquire
+    @second_turnstile.wait
   end
 end
 

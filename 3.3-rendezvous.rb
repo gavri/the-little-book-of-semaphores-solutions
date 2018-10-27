@@ -3,15 +3,15 @@ b_sem = Semaphore.new(0)
 
 async do
   event :a1
-  a_sem.release
-  b_sem.acquire
+  a_sem.signal
+  b_sem.wait
   event :a2
 end
 
 async do
   event :b1
-  b_sem.release
-  a_sem.acquire
+  b_sem.signal
+  a_sem.wait
   event :b2
 end
 

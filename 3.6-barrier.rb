@@ -9,9 +9,9 @@ class Barrier
 
   def barricade
     @number_of_threads_at_barrier.increment
-    @turnstile.release if @number_of_threads_at_barrier.count_is_at?(@number_of_threads)
-    @turnstile.acquire
-    @turnstile.release
+    @turnstile.signal if @number_of_threads_at_barrier.count_is_at?(@number_of_threads)
+    @turnstile.wait
+    @turnstile.signal
   end
 end
 

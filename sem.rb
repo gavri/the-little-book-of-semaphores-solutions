@@ -7,13 +7,11 @@ def rand_sleep
 end
 
 class Semaphore
-  def signal
-    release
-    rand_sleep
+  def signal(n = 1)
+    release(n)
   end
 
   def wait
     acquire
-    rand_sleep
   end
 end

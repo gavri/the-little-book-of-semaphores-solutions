@@ -8,36 +8,36 @@ rendezvous = Semaphore.new(0)
 
 number_of_pairs.times do |i|
   async do
-    mutex.acquire
+    mutex.wait
     if followers > 0
       followers -= 1
-      followers_sem.release
+      followers_sem.signal
     else
       leaders += 1
-      mutex.release
-      leaders_sem.acquire
+      mutex.signal
+      leaders_sem.wait
     end
 
     event "leader"
-    rendezvous.acquire
-    mutex.release
+    rendezvous.wait
+    mutex.signal
   end
 end
 
 number_of_pairs.times do |i|
   async do
-    mutex.acquire
+    mutex.wait
     if leaders > 0
       leaders -= 1
-      leaders_sem.release
+      leaders_sem.signal
     else
       followers += 1
-      mutex.release
-      followers_sem.acquire
+      mutex.signal
+      followers_sem.wait
     end
 
     event "follower"
-    rendezvous.release
+    rendezvous.signal
   end
 end
 

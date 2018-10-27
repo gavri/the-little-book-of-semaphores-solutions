@@ -14,21 +14,21 @@ class ReusableBarrier
     @lock.critical_section do
       @number_of_threads_at_barrier.increment
       if @number_of_threads_at_barrier.count_is_at?(@number_of_threads)
-        @second_turnstile.acquire
-        @first_turnstile.release
+        @second_turnstile.wait
+        @first_turnstile.signal
       end
     end
-    @first_turnstile.acquire
-    @first_turnstile.release
+    @first_turnstile.wait
+    @first_turnstile.signal
     @lock.critical_section do
       @number_of_threads_at_barrier.decrement
       if @number_of_threads_at_barrier.count_is_at?(0)
-        @first_turnstile.acquire
-        @second_turnstile.release
+        @first_turnstile.wait
+        @second_turnstile.signal
       end
     end
-    @second_turnstile.acquire
-    @second_turnstile.release
+    @second_turnstile.wait
+    @second_turnstile.signal
   end
 end
 

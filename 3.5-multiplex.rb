@@ -6,9 +6,9 @@ number_of_threads = 10
 
 number_of_threads.times do
   async do
-    sem.acquire
+    sem.wait
     max_concurrent
-    sem.release
+    sem.signal
   end
 end
 

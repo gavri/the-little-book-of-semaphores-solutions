@@ -1,15 +1,15 @@
 sem = Semaphore.new(1)
 
 async do
-  sem.acquire
+  sem.wait
   inc_count
-  sem.release
+  sem.signal
 end
 
 async do
-  sem.acquire
+  sem.wait
   inc_count
-  sem.release
+  sem.signal
 end
 
 wait_on_test_threads
