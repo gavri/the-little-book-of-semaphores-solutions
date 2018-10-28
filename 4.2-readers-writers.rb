@@ -19,11 +19,32 @@ class NonatomicStore
   end
 end
 
+class LightSwitch
+  def initialize(binary_semaphore)
+    @count = 0
+    @count_mutex = Lock.new
+    @binary_semaphore = binary_semaphore
+  end
+
+  def enter
+    @count_mutex.critical_section do
+      @count += 1
+      @binary_semaphore.wait if @count == 1
+    end
+  end
+
+  def leave
+    @count_mutex.critical_section do
+      @count -= 1
+      @binary_semaphore.signal if @count == 0
+    end
+  end
+end
+
 class ReadWriteLock
   def initialize
-    @number_of_readers_mutex = Lock.new
-    @number_of_readers = 0
     @room_empty = Semaphore.new(1)
+    @light_switch = LightSwitch.new(@room_empty)
   end
 
   def write
@@ -33,15 +54,9 @@ class ReadWriteLock
   end
 
   def read
-    @number_of_readers_mutex.critical_section do
-      @number_of_readers += 1
-      @room_empty.wait if @number_of_readers == 1
-    end
+    @light_switch.enter
     result = yield
-    @number_of_readers_mutex.critical_section do
-      @number_of_readers -= 1
-      @room_empty.signal if @number_of_readers == 0
-    end
+    @light_switch.leave
     result
   end
 end
